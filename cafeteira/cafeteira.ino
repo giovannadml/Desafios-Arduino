@@ -54,7 +54,7 @@ void loop() {
 	// que escolhe o tamanho fica na posição de repouso, em 90°
 	//posicaoServo(servo_tamanho, 90);
   }
-  delay(1000);
+  delay(500);
 }
 
 
