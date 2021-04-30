@@ -1,6 +1,6 @@
 String recebido;
 String sequenciaNumerica = "";
-int led, sequencia, contador = 2, velocidade = 1000;
+int led, sequencia, contador = 1, velocidade = 1000;
 long numeroGerado;
 char stateGame = 0;
 
@@ -18,17 +18,17 @@ void setup() {
 }
 /*
 stateGame = 0 -- inicio do jogo
-stateGame = 1 -- jogo nivel1
-stateGame = 2 -- jogo nivel2 até onde o usuário conseguir (aumenta a 
-				velocidade e a quantidade de números para lembrar depois 
-				do nível 5 - a velocidade aumenta até o nível 10)
-stateGame = 3 -- fim de jogo "Game over"
-stateGame = 4 -- jogar novamente?
+stateGame = 1 -- níveis do jogo (aumenta a velocidade e a quantidade de números 
+                 para lembrar - a velocidade aumenta a partir do nível 5 até o 
+                 nível 10)
+stateGame = 2 -- fim de jogo "Game over"
+stateGame = 3 -- jogar novamente?
 */
 void loop() {
   switch (stateGame) {
     case 0:
       // inicio de jogo
+	  Serial.println("");
       Serial.println("*. INICIO .*");
       Serial.println("Comecar? (s/n)");
       leserial();
@@ -37,32 +37,19 @@ void loop() {
         Serial.println("Iniciando...");
         piscaled(1000,3);
       } else {
-        stateGame = 3;
+        stateGame = 0;
         Serial.println("Jogo nao iniciado"); 
         piscaled(300,5);     
       }
       break;
     case 1:
-      // Nivel 1 
-	  Serial.println("");
-      Serial.println("*. Nivel 1 .*");
-      geraSequencia(1000, 3); 
-      leserial();
-      if (recebido == sequenciaNumerica){
-        stateGame = 2;
-        Serial.println("Parabens! proximo nivel.");
-        piscaled(800,3);
-      } else {
-        stateGame = 3;
-        Serial.println("Aaah nao, voce errou!"); 
-        piscaled(300,5);     
-      }
-      break;
-    case 2:
-      // Nivel 2 
+      // Níveis do jogo
 	  Serial.println("");
       Serial.println(String("*. Nivel ") + contador + String(" .*"));
-      if(contador < 5){
+      if(contador == 1) {
+  		geraSequencia(1000, 3);
+    		leserial();
+	  }else if(contador < 5){
 		geraSequencia(1000, 5); 
 		leserial();
       } else {
@@ -71,41 +58,50 @@ void loop() {
 	  }
 	  if (recebido == sequenciaNumerica){
 	    contador = contador + 1;
-        stateGame = 2;
         Serial.println("Parabens! proximo nivel.");
         piscaled(1000,3);
 	    // para ir ficando mais difícil
-	    if(contador <= 6){
-		  velocidade = velocidade - 60;
+	    if(contador <= 4){
+		  velocidade = velocidade - 70;
+		} else if(contador <= 7){
+		  velocidade = velocidade - 80;
 		} else if(contador < 10){
-		  velocidade = velocidade - 75;
-		} 
+		  velocidade = velocidade - 95;
+		}
       } else {
-        stateGame = 3;
+        stateGame = 2;
         Serial.println("Aaah nao, voce errou!"); 
         piscaled(300,5);     
       }
       break;
-    case 3:
+    case 2:
       // Game over!!!
+	  Serial.println("");
       Serial.println("*.* Game Over *.*"); 
       piscaled(100,5);
-      stateGame = 4;
+      stateGame = 3;
       break;
-    case 4:
+    case 3:
       Serial.println("jogar novamente? (s/n)"); 
       leserial();
       if (recebido.equalsIgnoreCase("s")){
         stateGame = 1;
         Serial.println("Jogo comecando...");
-	    contador = 2;
+	    contador = 1;
         piscaled(1000,3);
       } else {
-        stateGame = 3;
+        stateGame = 4;
         Serial.println("Jogo nao iniciado"); 
         piscaled(300,5);     
       }
       break;
+    case 4:
+	  Serial.println("");
+	  Serial.println("Obrigada por jogar! Ate a proxima :)"); Serial.println("");
+	  Serial.println("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"); 
+	  contador = 1;
+	  stateGame = 0;
+	  break;
   }
 }
 
