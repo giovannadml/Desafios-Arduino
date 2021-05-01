@@ -30,15 +30,15 @@ void loop() {
 	// então o compartimento tem que abrir (90° indica o compartimento aberto)
 	posicaoServo(servo_compartimento, 90);
 	// caso o compartimento esteja aberto, o usuário pode escolher um tamanho de café, curto ou longo.
-	// se a distância da mão da pessoa for maior ou igual a 30cm, o café é longo (40ml)
-	if (dist_tam_anterior != dist_tam_atual && sensor_tamanho.distance() >= 30){
+	// se a distância da mão da pessoa for maior que 30cm, o café é longo (40ml)
+	if (dist_tam_anterior != dist_tam_atual && sensor_tamanho.distance() > 30){
 	  // então a posição do servo é de 0°
 	  posicaoServo(servo_tamanho, 0);
 	  delay(500);
 	  // e depois volta para a posição de repouso, em 90°
 	  posicaoServo(servo_tamanho, 90);
-	// se a distância for menor que 30cm, o café é curto (20ml)
-	} else if (dist_tam_anterior != dist_tam_atual && sensor_tamanho.distance() < 30) {
+	// se a distância for menor ou igual a 30cm, o café é curto (20ml)
+	} else if (dist_tam_anterior != dist_tam_atual && sensor_tamanho.distance() <= 30) {
 	  // então a posição do servo é de 180°
 	  posicaoServo(servo_tamanho, 180);
 	  delay(500);
